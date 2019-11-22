@@ -26,7 +26,6 @@ import android.widget.Button;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
-
     BluetoothManager btManager;
     BluetoothAdapter btAdapter;
     BluetoothLeScanner btScanner;
@@ -43,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
 
         peripheralTextView = (TextView) findViewById(R.id.PeripheralTextView);
         peripheralTextView.setMovementMethod(new ScrollingMovementMethod());
+        peripheralTextView.setTextIsSelectable(true);
 
         startScanningButton = (Button) findViewById(R.id.StartScanButton);
         startScanningButton.setOnClickListener(new View.OnClickListener() {
@@ -90,14 +90,17 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onScanResult(int callbackType, ScanResult result) {
             String address = result.getDevice().getAddress().replaceAll(":", "");
+            String name = result.getDevice().getName();
 
-            peripheralTextView.append(result.getDevice().getName() + " - " + address + "\n");
+            if (name != null) {
+                peripheralTextView.append(name + " - " + address + "\n");
 
-            // auto scroll for text view
-            final int scrollAmount = peripheralTextView.getLayout().getLineTop(peripheralTextView.getLineCount()) - peripheralTextView.getHeight();
-            // if there is no need to scroll, scrollAmount will be <=0
-            if (scrollAmount > 0)
-                peripheralTextView.scrollTo(0, scrollAmount);
+                // auto scroll for text view
+                final int scrollAmount = peripheralTextView.getLayout().getLineTop(peripheralTextView.getLineCount()) - peripheralTextView.getHeight();
+                // if there is no need to scroll, scrollAmount will be <=0
+                if (scrollAmount > 0)
+                    peripheralTextView.scrollTo(0, scrollAmount);
+            }
         }
     };
 
