@@ -85,16 +85,15 @@ public class MainActivity extends AppCompatActivity {
         public void onScanResult(int callbackType, ScanResult result) {
             String address = result.getDevice().getAddress().replaceAll(":", "");
             String name = result.getDevice().getName();
+            String appendToList = name + " - " + address + "\n";
 
-            if (name != null) {
-                peripheralTextView.append(name + " - " + address + "\n");
+            peripheralTextView.append(appendToList);
 
-                // auto scroll for text view
-                final int scrollAmount = peripheralTextView.getLayout().getLineTop(peripheralTextView.getLineCount()) - peripheralTextView.getHeight();
-                // if there is no need to scroll, scrollAmount will be <=0
-                if (scrollAmount > 0)
-                    peripheralTextView.scrollTo(0, scrollAmount);
-            }
+            // auto scroll for text view
+            final int scrollAmount = peripheralTextView.getLayout().getLineTop(peripheralTextView.getLineCount()) - peripheralTextView.getHeight();
+            // if there is no need to scroll, scrollAmount will be <=0
+            if (scrollAmount > 0)
+                peripheralTextView.scrollTo(0, scrollAmount);
         }
     };
 
