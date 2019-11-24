@@ -19,6 +19,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.util.HashSet;
+
 public class MainActivity extends AppCompatActivity {
     BluetoothManager btManager;
     BluetoothAdapter btAdapter;
@@ -28,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
     TextView peripheralTextView;
     private final static int REQUEST_ENABLE_BT = 1;
     private static final int PERMISSION_REQUEST_COARSE_LOCATION = 1;
+
+    HashSet<String> btDevice = new HashSet<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
         btAdapter = btManager.getAdapter();
         btScanner = btAdapter.getBluetoothLeScanner();
 
+        btDevice = new HashSet<String>();
 
         if (btAdapter != null && !btAdapter.isEnabled()) {
             Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
@@ -84,16 +89,21 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onScanResult(int callbackType, ScanResult result) {
             String address = result.getDevice().getAddress().replaceAll(":", "");
-            String name = result.getDevice().getName();
-            String appendToList = name + " - " + address + "\n";
 
-            peripheralTextView.append(appendToList);
+            if (!btDevice.contains(address)) {
+                btDevice.add(address);
 
-            // auto scroll for text view
-            final int scrollAmount = peripheralTextView.getLayout().getLineTop(peripheralTextView.getLineCount()) - peripheralTextView.getHeight();
-            // if there is no need to scroll, scrollAmount will be <=0
-            if (scrollAmount > 0)
-                peripheralTextView.scrollTo(0, scrollAmount);
+                String name = result.getDevice().getName();
+                String appendToList = name + " - " + address + "\n";
+
+                peripheralTextView.append(appendToList);
+
+                // auto scroll for text view
+                final int scrollAmount = peripheralTextView.getLayout().getLineTop(peripheralTextView.getLineCount()) - peripheralTextView.getHeight();
+                // if there is no need to scroll, scrollAmount will be <=0
+                if (scrollAmount > 0)
+                    peripheralTextView.scrollTo(0, scrollAmount);
+            }
         }
     };
 
