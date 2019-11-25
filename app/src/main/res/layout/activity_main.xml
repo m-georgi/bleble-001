@@ -24,16 +24,24 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="50dp"
-        android:text="Stop Scanning"
+        android:text="Stop Scanning to Select"
         android:id="@+id/StopScanButton"
         android:layout_marginTop="40dp"/>
 
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="100dp"
         android:id="@+id/PeripheralTextView"
-        android:scrollbars="vertical"
-        android:maxLines="30" />
+        android:layout_width="421dp"
+        android:layout_height="172dp"
+        android:layout_marginTop="100dp"
+        android:maxLines="30"
+        android:scrollbars="vertical" />
+
+    <Spinner
+        android:id="@+id/spinner"
+        android:layout_width="395dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="300dp"
+        android:maxLines="30"
+        android:scrollbars="vertical" />
 
 </RelativeLayout>

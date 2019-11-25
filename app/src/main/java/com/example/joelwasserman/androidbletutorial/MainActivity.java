@@ -16,10 +16,14 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     BluetoothManager btManager;
@@ -28,10 +32,13 @@ public class MainActivity extends AppCompatActivity {
     Button startScanningButton;
     Button stopScanningButton;
     TextView peripheralTextView;
+    Spinner spinner;
+
     private final static int REQUEST_ENABLE_BT = 1;
     private static final int PERMISSION_REQUEST_COARSE_LOCATION = 1;
 
-    HashSet<String> btDevice = new HashSet<String>();
+    private HashSet<String> btDevice = new HashSet<String>();
+    private List<String> btDevicelist = new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +48,9 @@ public class MainActivity extends AppCompatActivity {
         peripheralTextView = (TextView) findViewById(R.id.PeripheralTextView);
         peripheralTextView.setMovementMethod(new ScrollingMovementMethod());
         peripheralTextView.setTextIsSelectable(true);
+
+        spinner = (Spinner) findViewById(R.id.spinner);
+        spinner.setVisibility(View.INVISIBLE);
 
         startScanningButton = (Button) findViewById(R.id.StartScanButton);
         startScanningButton.setOnClickListener(new View.OnClickListener() {
@@ -97,6 +107,7 @@ public class MainActivity extends AppCompatActivity {
                 String appendToList = name + " - " + address + "\n";
 
                 peripheralTextView.append(appendToList);
+                btDevicelist.add(appendToList);
 
                 // auto scroll for text view
                 final int scrollAmount = peripheralTextView.getLayout().getLineTop(peripheralTextView.getLineCount()) - peripheralTextView.getHeight();
@@ -157,5 +168,12 @@ public class MainActivity extends AppCompatActivity {
                 btScanner.stopScan(leScanCallback);
             }
         });
+
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, btDevicelist);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(dataAdapter);
+
+        spinner.setVisibility(View.VISIBLE);
     }
 }
